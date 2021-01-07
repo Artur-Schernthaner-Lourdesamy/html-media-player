@@ -92,6 +92,30 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   media.addEventListener('ended', () => {
     timeSlider.value = media.duration.toFixed(5);
   });
+  // time display
+  const timeDisplay = document.createElement('div');
+  timeDisplay.classList.add("time-display");
+  mediaControls.appendChild(timeDisplay);
+  const timeFormat = (s) => {
+    let Seconds = Math.round(s) % 60;
+    let Minutes = Math.round(s / 60);
+    Seconds = (Seconds < 10 ? '0' : '') + Seconds;
+    Minutes = (Minutes < 10 ? '0' : '') + Minutes;
+    return `${Minutes}:${Seconds}`;
+  }
+  let showTimeLeft = true;
+  const updateTimeDisplay = () => {
+    if (showTimeLeft) {
+      timeDisplay.innerHTML = "-" + timeFormat(media.duration - media.currentTime);
+    } else {
+      timeDisplay.innerHTML = timeFormat(media.currentTime);
+    }
+  }
+  updateTimeDisplay();
+  timeDisplay.addEventListener('click', () => {
+    showTimeLeft = !showTimeLeft;
+    updateTimeDisplay();
+  });
   // mute button
   const mute = document.createElement('button');
   mute.classList.add('mute');
