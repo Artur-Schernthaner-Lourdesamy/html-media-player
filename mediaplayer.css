@@ -1,0 +1,102 @@
+.basic-media-player.audio-wrapper h1 {
+  font-size: 1rem;
+  background-color: rgba(201, 201, 201, 0.6);
+  text-align: center;
+  padding: 0.3em 0;
+  margin: 0;
+}
+
+.basic-media-player.video-wrapper {
+  position: relative;
+  line-height: 0;
+}
+
+.basic-media-player.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+.basic-media-player .media-controls {
+  background-color: rgba(201, 201, 201, 0.6);
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.basic-media-player.audio-wrapper .media-controls {
+  padding-bottom: 0.2rem;
+}
+
+.basic-media-player.video-wrapper .media-controls {
+  position: absolute;
+  bottom: 0;
+}
+
+.basic-media-player.video-wrapper.idle {
+  cursor: none;
+}
+
+.basic-media-player.video-wrapper.idle .media-controls {
+  display: none;
+}
+
+.basic-media-player button {
+  padding: 0.2rem 0.5rem;
+  width: 4.5rem;
+  height: 2rem;
+  text-align: center;
+  background: transparent;
+  font-size: 0.8rem;
+  font-family: inherit;
+  line-height: 0.9em;
+  border: none;
+  outline: none;
+}
+
+.basic-media-player.video-wrapper button.fullscreen {
+  margin-left: auto;
+}
+
+.basic-media-player .time-display {
+  font-size: 0.7rem;
+  width: 2.9em;
+  text-align: center;
+}
+
+.basic-media-player .time-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-grow: 1;
+  margin: 0 0.6em;
+  height: 2px;
+  width: 2rem;
+  background: #000;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.basic-media-player .time-slider::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.4rem;
+  width: 2px;
+  background: #000;
+  border: none;
+}
+.basic-media-player .time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.4rem;
+  width: 2px;
+  background: #000;
+}
+
+.basic-media-player input:focus-visible,
+.basic-media-player button:focus-visible {
+  outline: auto #ccc 1px;
+  outline-offset: -1px;
+}

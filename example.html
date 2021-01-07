@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Media Player</title>
+  <style>
+    .basic-media-player {
+      display: block;
+      width: 40em;
+      margin-bottom: 2em;
+      font-family: 'Courier New', Courier, monospace;
+    }
+  </style>
+  <link rel="stylesheet" href="mediaplayer.css">
+</head>
+
+<body>
+  <video allowfullscreen controls>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">
+  </video>
+  <audio controls>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3">
+  </audio>
+  <script src="mediaplayer.js"></script>
+</body>
+
+</html>
