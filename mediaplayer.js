@@ -63,6 +63,7 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   });
   media.addEventListener('pause', () => {
     playpause.innerHTML = 'play';
+    styleTimeSlider();
   });
   // time slider
   const timeSlider = document.createElement('input');
@@ -70,27 +71,32 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   timeSlider.type = "range";
   timeSlider.value = 0;
   timeSlider.min = 0;
-  timeSlider.max = media.duration.toFixed(5);
-  timeSlider.step = media.duration.toFixed(5) / 100;
+  timeSlider.max = 100;
+  timeSlider.step = 0.05;
+  const styleTimeSlider = () => {
+    timeSlider.setAttribute("style", `--value:${timeSlider.value}%`);
+  }
+  styleTimeSlider();
   mediaControls.appendChild(timeSlider);
   timeSlider.addEventListener('input', () => {
     media.pause();
-    media.currentTime = timeSlider.value;
+    media.currentTime = timeSlider.value * 0.01 * media.duration;
+    styleTimeSlider();
   });
   timeSlider.addEventListener('change', () => {
     media.play();
   });
   media.addEventListener('durationchange', () => {
-    timeSlider.max = media.duration.toFixed(5);
-    timeSlider.step = media.duration.toFixed(5) / 100;
     updateTimeDisplay();
   });
   media.addEventListener('timeupdate', () => {
-    if (!media.paused) timeSlider.value = media.currentTime;
+    if (!media.paused) timeSlider.value = media.currentTime / media.duration * 100;
+    styleTimeSlider();
     updateTimeDisplay();
   });
   media.addEventListener('ended', () => {
-    timeSlider.value = media.duration.toFixed(5);
+    timeSlider.value = 100;
+    styleTimeSlider();
   });
   // time display
   const timeDisplay = document.createElement('div');
@@ -129,6 +135,20 @@ Array.prototype.forEach.call(mediaElements, function (el) {
       media.muted = true;
       mute.innerHTML = "unmute";
     }
+  });
+  // volume Slider
+  const volumeSlider = document.createElement('input');
+  volumeSlider.classList.add("volume-slider");
+  volumeSlider.type = "range";
+  volumeSlider.value = 1;
+  volumeSlider.min = 0;
+  volumeSlider.max = 1;
+  volumeSlider.step = 0.05;
+  mediaControls.appendChild(volumeSlider);
+  volumeSlider.setAttribute("style", `--value:100%`);
+  volumeSlider.addEventListener('input', () => {
+    media.volume = volumeSlider.value;
+    volumeSlider.setAttribute("style", `--value:${volumeSlider.value * 100}%`);
   });
   if (media.nodeName = "VIDEO") {
     // idleMouse
@@ -176,7 +196,6 @@ Array.prototype.forEach.call(mediaElements, function (el) {
             });
           }
         } else if (wrapper.webkitRequestFullscreen) { // Safari
-          console.log('test');
           if (!fullscreenFlag) {
             wrapper.webkitRequestFullscreen();
             fullscreenFlag = true;
