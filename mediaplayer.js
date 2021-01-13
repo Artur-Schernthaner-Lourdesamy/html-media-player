@@ -1,56 +1,37 @@
-HTMLElement.prototype.wrap = function (elms) {
-  // Convert `elms` to an array, if necessary.
-  if (!elms.length) elms = [elms];
-
-  // Loops backwards to prevent having to clone the wrapper on the
-  // first element (see `child` below).
-  for (var i = elms.length - 1; i >= 0; i--) {
-    var child = (i > 0) ? this.cloneNode(true) : this;
-    var el = elms[i];
-
-    // Cache the current parent and sibling.
-    var parent = el.parentNode;
-    var sibling = el.nextSibling;
-
-    // Wrap the element (is automatically removed from its current
-    // parent).
-    child.appendChild(el);
-
-    // If the element had a sibling, insert the wrapper before
-    // the sibling to maintain the HTML structure; otherwise, just
-    // append it to the parent.
-    if (sibling) {
-      parent.insertBefore(child, sibling);
-    } else {
-      parent.appendChild(child);
-    }
-  }
-};
-
 let mediaElements = document.querySelectorAll("audio[controls], video[controls]");
-Array.prototype.forEach.call(mediaElements, function (el) {
+Array.prototype.forEach.call(mediaElements, (el) => {
   const media = el;
   media.removeAttribute("controls");
   media.setAttribute("preload", "metadatata");
+  const options = { // quick way for disabling control elements
+    playPauseButton: true,
+    timeSlider: true,
+    timeDisplay: true,
+    muteButton: true,
+    volumeSlider: true,
+    fullScreenButton: true
+  }
   const wrapper = document.createElement("div");
   wrapper.classList.add("basic-media-player");
   if (media.nodeName == "AUDIO") {
     wrapper.classList.add("audio-wrapper");
-    wrapper.wrap(media);
     wrapper.innerHTML += `<h1>Audio File</h1>`;
   } else if (media.nodeName == "VIDEO") {
     wrapper.classList.add("video-wrapper");
-    wrapper.wrap(media);
   }
+  const parent = media.parentNode;        //
+  const sibling = media.nextSibling;      //
+  wrapper.append(media);                  // wrapping the media Element in the wrapper
+  parent.insertBefore(wrapper, sibling);  //
   // media controls wrapper
   const mediaControls = document.createElement("div");
   mediaControls.classList.add("media-controls");
-  wrapper.appendChild(mediaControls);
+  wrapper.append(mediaControls);
   // playpause button
   const playpause = document.createElement('button');
   playpause.classList.add('playpause');
   playpause.innerHTML = 'play';
-  mediaControls.appendChild(playpause);
+  if (options.fullScreenButton) mediaControls.append(playpause);
   playpause.addEventListener('click', () => {
     if (media.paused) {
       media.play();
@@ -77,7 +58,7 @@ Array.prototype.forEach.call(mediaElements, function (el) {
     timeSlider.setAttribute("style", `--value:${timeSlider.value}%`);
   }
   styleTimeSlider();
-  mediaControls.appendChild(timeSlider);
+  if (options.timeSlider) mediaControls.append(timeSlider);
   timeSlider.addEventListener('input', () => {
     media.pause();
     media.currentTime = timeSlider.value * 0.01 * media.duration;
@@ -101,7 +82,7 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   // time display
   const timeDisplay = document.createElement('div');
   timeDisplay.classList.add("time-display");
-  mediaControls.appendChild(timeDisplay);
+  if (options.timeDisplay) mediaControls.append(timeDisplay);
   const timeFormat = (s) => {
     let Seconds = Math.round(s) % 60;
     let Minutes = Math.round(s / 60);
@@ -126,7 +107,7 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   const mute = document.createElement('button');
   mute.classList.add('mute');
   mute.innerHTML = "mute";
-  mediaControls.appendChild(mute);
+  if (options.muteButton) mediaControls.append(mute);
   mute.addEventListener('click', () => {
     if (media.muted) {
       media.muted = false;
@@ -144,13 +125,13 @@ Array.prototype.forEach.call(mediaElements, function (el) {
   volumeSlider.min = 0;
   volumeSlider.max = 1;
   volumeSlider.step = 0.05;
-  mediaControls.appendChild(volumeSlider);
+  if (options.volumeSlider) mediaControls.append(volumeSlider);
   volumeSlider.setAttribute("style", `--value:100%`);
   volumeSlider.addEventListener('input', () => {
     media.volume = volumeSlider.value;
     volumeSlider.setAttribute("style", `--value:${volumeSlider.value * 100}%`);
   });
-  if (media.nodeName = "VIDEO") {
+  if (media.nodeName == "VIDEO") {
     // idleMouse
     let idleMouseTimer;
     wrapper.addEventListener('mousemove', () => {
@@ -171,11 +152,11 @@ Array.prototype.forEach.call(mediaElements, function (el) {
       }
     });
     // fullScreen
-    if ((wrapper.requestFullscreen || wrapper.webkitRequestFullscreen) && media.hasAttribute("allowfullscreen")) {
+    if ((wrapper.requestFullscreen || wrapper.webkitRequestFullscreen) && options.fullScreenButton) {
       const fullScreen = document.createElement('button');
       fullScreen.classList.add('fullscreen');
       fullScreen.innerHTML = "fullscreen";
-      mediaControls.appendChild(fullScreen);
+      mediaControls.append(fullScreen);
       fullScreen.addEventListener('click', () => {
         toggleFullScreen();
       });
